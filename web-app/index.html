@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Attendance System</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <h1>📊 Staff Attendance System</h1>
+      </div>
+      <ul class="navbar-menu">
+        <li><a href="#" onclick="showTab('dashboard')">Dashboard</a></li>
+        <li><a href="#" onclick="showTab('attendance')">Attendance</a></li>
+        <li><a href="#" onclick="showTab('monthly')">Monthly Report</a></li>
+        <li><a href="#" onclick="showTab('employees')">Employees</a></li>
+      </ul>
+    </nav>
+
+    <!-- Dashboard Tab -->
+    <div id="dashboard" class="tab active">
+      <h2>Dashboard</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>📋 Total Employees</h3>
+          <p id="totalEmployees">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>✅ Present Today</h3>
+          <p id="presentToday">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>❌ Absent Today</h3>
+          <p id="absentToday">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>⏱️ Clocked In</h3>
+          <p id="clockedInToday">0</p>
+        </div>
+      </div>
+      
+      <div class="dashboard-section">
+        <h3>Today's Quick View</h3>
+        <div id="todayAttendance" class="quick-view">
+          <p style="text-align: center; color: #999;">Loading today's attendance...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendance Tab -->
+    <div id="attendance" class="tab">
+      <h2>Daily Attendance</h2>
+      
+      <div class="form-section">
+        <h3>Clock In / Clock Out</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Select Employee</label>
+            <select id="employeeSelect">
+              <option value="">-- Choose Employee --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="attendanceDate">
+          </div>
+          <div class="form-group">
+            <label>Break Time (minutes)</label>
+            <input type="number" id="breakMinutes" placeholder="0" min="0" max="480">
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button class="btn-primary" onclick="clockIn()">🔵 Clock In</button>
+          <button class="btn-danger" onclick="clockOut()">🔴 Clock Out</button>
+          <button class="btn-secondary" onclick="resetAttendanceForm()">🔄 Reset</button>
+        </div>
+      </div>
+
+      <div class="attendance-info">
+        <div id="currentStatus" class="status-box">
+          <p>Select an employee to see current status</p>
+        </div>
+      </div>
+
+      <h3>Attendance Records</h3>
+      <div class="table-wrapper">
+        <table id="attendanceTable">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Date</th>
+              <th>Clock In</th>
+              <th>Clock Out</th>
+              <th>Break (min)</th>
+              <th>Hours Worked</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="7" style="text-align: center; color: #999;">No records yet</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Monthly Report Tab -->
+    <div id="monthly" class="tab">
+      <h2>Monthly Attendance Report</h2>
+      
+      <div class="form-section">
+        <h3>Generate Report</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Employee (Optional)</label>
+            <select id="reportEmployeeSelect">
+              <option value="">All Employees</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Select Month</label>
+            <input type="month" id="reportMonth">
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button class="btn-primary" onclick="generateMonthlyReport()">📈 Generate Report</button>
+          <button class="btn-success" onclick="downloadMonthlyReport()">📥 Download CSV</button>
+          <button class="btn-secondary" onclick="printMonthlyReport()">🖨️ Print</button>
+        </div>
+      </div>
+
+      <h3>Report Summary</h3>
+      <div class="table-wrapper">
+        <table id="monthlyReportTable">
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>Employee Name</th>
+              <th>Month</th>
+              <th>Total Days</th>
+              <th>Days Present</th>
+              <th>Days Absent</th>
+              <th>Total Hours</th>
+              <th>Attendance %</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="8" style="text-align: center; color: #999;">Generate a report to view data</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="reportStats" class="stats-box" style="display: none; margin-top: 30px;">
+        <h3>Summary Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-card small">
+            <h4>Total Employees Reported</h4>
+            <p id="statTotalEmps">0</p>
+          </div>
+          <div class="stat-card small">
+            <h4>Average Attendance %</h4>
+            <p id="statAvgAttendance">0%</p>
+          </div>
+          <div class="stat-card small">
+            <h4>Total Hours</h4>
+            <p id="statTotalHours">0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Employees Tab -->
+    <div id="employees" class="tab">
+      <h2>Employee Management</h2>
+      
+      <div class="form-section">
+        <h3>Add New Employee</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Employee ID *</label>
+            <input type="text" id="empId" placeholder="e.g., EMP001">
+          </div>
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="empName" placeholder="e.g., John Doe">
+          </div>
+          <div class="form-group">
+            <label>Department</label>
+            <input type="text" id="empDept" placeholder="e.g., HR, IT, Sales">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="empEmail" placeholder="e.g., john@example.com">
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button class="btn-primary" onclick="addEmployee()">➕ Add Employee</button>
+          <button class="btn-secondary" onclick="resetEmployeeForm()">🔄 Reset</button>
+        </div>
+      </div>
+
+      <h3>Employee Directory</h3>
+      <div class="table-wrapper">
+        <table id="employeeTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Employee ID</th>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Email</th>
+              <th>Date Added</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="6" style="text-align: center; color: #999;">No employees yet</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2026 Staff Attendance System | Version 1.0.0 | All Rights Reserved</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
