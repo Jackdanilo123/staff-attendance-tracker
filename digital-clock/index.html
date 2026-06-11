@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Clock - Multi-Timezone</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <h1>🕐 Digital Clock</h1>
+        <div class="header-actions">
+          <button class="btn btn-secondary" id="toggleFormatBtn" title="Toggle 12/24 hour format (T)">12/24 Format</button>
+          <button class="btn btn-secondary" id="toggleThemeBtn" title="Toggle dark/light mode (D)">🌙 Dark Mode</button>
+          <button class="btn btn-primary" id="addTimezoneBtn" title="Add a new timezone (A)">+ Add Timezone</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Clock Display -->
+    <main class="main">
+      <div class="current-time-section">
+        <div class="current-time-card">
+          <div class="time-header">
+            <h2 id="currentTimeLocation">Local Time</h2>
+            <p id="currentDateDisplay"></p>
+          </div>
+          <div class="current-time-display">
+            <div class="time-large" id="currentTimeDisplay">00:00:00</div>
+            <div class="time-period" id="timePeriod"></div>
+          </div>
+          <div class="time-info">
+            <p id="dayDisplay"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timezones Grid -->
+      <div class="timezones-section">
+        <h2>Time Zones</h2>
+        <div class="timezones-grid" id="timezonesContainer">
+          <!-- Time zone cards will be inserted here -->
+        </div>
+        <div class="empty-state" id="emptyState" style="display: none;">
+          <p>📍 No time zones added yet</p>
+          <p>Click "+ Add Timezone" to get started</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Add Timezone Modal -->
+    <div class="modal" id="addTimezoneModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add Time Zone</h2>
+          <button class="modal-close" id="closeModalBtn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="search-box">
+            <input 
+              type="text" 
+              id="timezoneSearch" 
+              placeholder="Search time zones (e.g., Tokyo, Paris, New York)..."
+              class="search-input"
+            >
+          </div>
+          <div class="timezone-list" id="timezoneList">
+            <!-- Time zones will be listed here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancelModalBtn">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>💡 Keyboard shortcuts: <strong>T</strong> = Format, <strong>D</strong> = Dark mode, <strong>A</strong> = Add timezone, <strong>Esc</strong> = Close</p>
+  </footer>
+
+  <script src="js/clock.js"></script>
+</body>
+</html>
